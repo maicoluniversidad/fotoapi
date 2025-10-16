@@ -54,4 +54,19 @@ async function Detalle(id) {
       </div>
     </div>
   `;
+  // --- Función para compartir una foto ---
+function compartirFoto(foto) {
+  if (navigator.share) {
+    navigator.share({
+      title: `Foto de ${foto.author}`,
+      text: `Mira esta increíble foto de ${foto.author} 📸`,
+      url: foto.download_url
+    })
+    .then(() => console.log('Compartido correctamente'))
+    .catch((error) => console.log('Error al compartir:', error));
+  } else {
+    alert("Tu navegador no soporta la función de compartir 😔");
+  }
+}
+
 }
