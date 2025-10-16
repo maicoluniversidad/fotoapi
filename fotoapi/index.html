@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FotoAPI - Galería de Imágenes</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav>
+    <button onclick="Home()">Home</button>
+    <button onclick="Informativa()">Informativa</button>
+    <button onclick="Original()">Original</button>
+    <button onclick="Favoritos()">Favoritos</button>
+  </nav>
+
+  <div id="contenedor-fotos" class="galeria"></div>
+
+  <script src="carpeta/js/conexion.js"></script>
+  <script src="carpeta/js/home.js"></script>
+  <script src="carpeta/js/favoritos.js"></script>
+  <script src="carpeta/js/original.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", Home);
+  </script>
+</body>
+</html>

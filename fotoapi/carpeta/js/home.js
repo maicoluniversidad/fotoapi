@@ -1,75 +1,110 @@
-function GenerarLista(arraypokemones){
-    let listaHTML = "";
-    for (let i = 0; i < arraypokemones.length; i++) {
-        let id = arraypokemones[i].url.split("/")[6];
-        listaHTML += `
-        <div class="c-lista-pokemon poke-${id}" onclick="Detalle('${id}')">
-            <p>#${id}</p>
-            <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${id}.png" width="auto" height="60" loading="lazy" alt="${arraypokemones[i].name}">
-            <p>${arraypokemones[i].name}</p>
-        </div>`;
-    }
+async function Home() {
+  const contenedor = document.getElementById("contenedor-fotos");
+  contenedor.innerHTML = "<h2>🏠 Galería Principal</h2>";
 
-    return listaHTML;
-}
+  const fotos = await conexionLista();
+  const favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
 
-function buscadorfuncion(asa){
-    if(asa.length >= 3){
-        const filtrados = [];
-        for (let i = 0; i < pokemones.length; i++) {
-            const nombre = pokemones[i].name.toLowerCase();
-            if (nombre.includes(asa.toLowerCase())) {
-                filtrados.push(pokemones[i]);
-            }
-        }
-        let listapokes = GenerarLista(filtrados)
-        document.getElementById("la-lista").innerHTML = listapokes;
-    }
-}
+  const galeria = document.createElement("div");
+  galeria.classList.add("galeria");
 
-function Home(){
+  fotos.forEach(foto => {
+    const div = document.createElement("div");
+    div.classList.add("foto");
 
-    var root = document.getElementById("root");
-    root.innerHTML = ""
-    //buscador
-    const buscador = document.createElement("input");
-    buscador.classList.add("c-buscador");
-    buscador.type = "text";
-    buscador.placeholder = "Buscar Pokémon...";
-    buscador.addEventListener("input", () => {
-            buscadorfuncion(buscador.value);
+    const esFavorito = favoritos.some(f => f.id === foto.id);
+
+    div.innerHTML = `
+      <img src="${foto.download_url}" alt="${foto.author}" data-id="${foto.id}">
+      <p>${foto.author}</p>
+      <button 
+        class="btn-favorito ${esFavorito ? 'activo' : ''}" 
+        data-id="${foto.id}" 
+        data-url="${foto.download_url}" 
+        data-author="${foto.author}"
+        data-width="${foto.width}" 
+        data-height="${foto.height}">
+        ${esFavorito ? "💖" : "🤍"}
+      </button>
+    `;
+
+    galeria.appendChild(div);
+  });
+
+  contenedor.appendChild(galeria);
+
+  // Click en botón de favorito
+  document.querySelectorAll(".btn-favorito").forEach(btn => {
+    btn.addEventListener("click", e => {
+      e.stopPropagation(); // evitar que abra modal
+      const foto = {
+        id: e.target.dataset.id,
+        url: e.target.dataset.url,
+        author: e.target.dataset.author,
+        width: e.target.dataset.width,
+        height: e.target.dataset.height
+      };
+      guardarFavorito(foto);
+
+      e.target.classList.toggle("activo");
+      e.target.textContent = e.target.classList.contains("activo") ? "💖" : "🤍";
     });
+  });
 
-    // filtro
-    const tipos = [
-        "normal", "fighting", "flying", "poison", "ground", "rock", "bug",
-        "ghost", "steel", "fire", "water", "grass", "electric", "psychic", "ice",
-        "dragon", "dark", "fairy", "stellar", "unknown"
-    ];
-    const filtro = document.createElement("div");
+  // Click en imagen → mostrar información
+  document.querySelectorAll(".foto img").forEach(img => {
+    img.addEventListener("click", e => {
+      const id = e.target.dataset.id;
+      const foto = fotos.find(f => f.id === id);
+      mostrarInfoFoto(foto);
+    });
+  });
+}
 
-    for (let i = 0; i < tipos.length; i++) {
-        const btn = document.createElement("button");
-        btn.textContent = tipos[i];
-        
-        // Agregar el evento click para filtrar por tipo
-        btn.addEventListener("click", () => {
-            FiltroConexion(tipos[i]); 
-        });
+function guardarFavorito(foto) {
+  let favoritos = JSON.parse(localStorage.getItem("favoritos")) || [];
+  const existe = favoritos.some(f => f.id === foto.id);
 
-        // Agregar el botón al contenedor
-        filtro.appendChild(btn);
-    }
-    
-    //listas
-    const listapokes = GenerarLista(pokemones);
-    var contenedorLista = document.createElement("section")
-    contenedorLista.classList.add("c-lista");
-    contenedorLista.id = "la-lista"
-    contenedorLista.innerHTML = listapokes;
-    //agregar
+  if (existe) {
+    favoritos = favoritos.filter(f => f.id !== foto.id);
+  } else {
+    favoritos.push(foto);
+  }
 
-    document.getElementById("root").appendChild(buscador)
-    document.getElementById("root").appendChild(filtro)
-    document.getElementById("root").appendChild(contenedorLista)
+  localStorage.setItem("favoritos", JSON.stringify(favoritos));
+}
+
+// Muestra modal con información
+function mostrarInfoFoto(foto) {
+  const modal = document.createElement("div");
+  modal.classList.add("foto-info");
+
+  modal.innerHTML = `
+    <div class="foto-info-content">
+      <button class="cerrar-info">✖</button>
+      <img src="${foto.download_url}" alt="${foto.author}">
+      <h3>${foto.author}</h3>
+      <p><b>ID:</b> ${foto.id}</p>
+      <p><b>Tamaño:</b> ${foto.width} x ${foto.height}</p>
+      <a href="${foto.download_url}" target="_blank">🔗 Ver imagen completa</a>
+      <button class="btn-favorito-modal" data-id="${foto.id}" data-url="${foto.download_url}" data-author="${foto.author}">❤️ Agregar a favoritos</button>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  // Cerrar modal
+  modal.querySelector(".cerrar-info").addEventListener("click", () => modal.remove());
+
+  // Agregar a favoritos desde modal
+  modal.querySelector(".btn-favorito-modal").addEventListener("click", (e) => {
+    const fotoFav = {
+      id: e.target.dataset.id,
+      url: e.target.dataset.url,
+      author: e.target.dataset.author
+    };
+    guardarFavorito(fotoFav);
+    e.target.textContent = "💖 Guardada";
+    e.target.disabled = true;
+  });
 }
