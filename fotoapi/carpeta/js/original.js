@@ -1,7 +1,7 @@
 // --- original.js ---
 async function Original() {
   const root = document.getElementById("root");
-  root.innerHTML = "<p>🌍 Cargando autores y fotos...</p>";
+  root.innerHTML = "<p> Cargando autores y fotos...</p>";
 
   try {
     const res = await fetch("https://picsum.photos/v2/list?limit=100");
@@ -30,7 +30,7 @@ async function Original() {
 
         return `
           <section class="autor-section">
-            <h3>📸 ${autor}</h3>
+            <h3> ${autor}</h3>
             <div class="galeria-autor">
               ${fotosHTML}
             </div>
@@ -41,13 +41,13 @@ async function Original() {
 
     // Insertar en el DOM
     root.innerHTML = `
-      <h2 class="titulo-original">🌍 Explora el mundo a través de sus autores</h2>
+      <h2 class="titulo-original"> Explora el mundo a través de sus autores</h2>
       <div class="contenedor-autores">
         ${seccionesHTML}
       </div>
     `;
   } catch (error) {
     console.error("Error al cargar las imágenes:", error);
-    root.innerHTML = `<p>⚠️ Error al cargar las imágenes. Intenta nuevamente.</p>`;
+    root.innerHTML = `<p> Error al cargar las imágenes. Intenta nuevamente.</p>`;
   }
 }

@@ -46,7 +46,7 @@ async function Detalle(id) {
       <div class="texto">
         <h2>${foto.author}</h2>
         <p><strong>ID:</strong> ${foto.id}</p>
-        <p>📸 Foto original: <a href="${foto.url}" target="_blank">Ver en Picsum</a></p>
+        <p> Foto original: <a href="${foto.url}" target="_blank">Ver en Picsum</a></p>
         <button id="corazon-${foto.id}" onclick="toggleFavorito('${foto.id}', '${foto.author}', '${foto.download_url}')">
           ${esFavorito ? "❤️" : "🤍"} Favorito
         </button>

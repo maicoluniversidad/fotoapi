@@ -3,7 +3,7 @@ function Informativa() {
 
   root.innerHTML = `
     <section class="seccion-informativa">
-      <h2>📸 Sobre nuestra API de Fotos</h2>
+      <h2> Sobre nuestra API de Fotos</h2>
       <p>
         Esta aplicación obtiene sus imágenes desde la API pública 
         <a href="https://picsum.photos/" target="_blank">Lorem Picsum</a>.
@@ -17,16 +17,16 @@ function Informativa() {
       </p>
 
       <ul class="info-lista">
-        <li>🌍 Fuente: Lorem Picsum API (https://picsum.photos)</li>
-        <li>🧑‍🎨 Autores internacionales</li>
-        <li>💾 Soporte para favoritos (localStorage)</li>
-        <li>🔍 Buscador de autores</li>
-        <li>📱 Diseño adaptable (responsive)</li>
+        <li> Fuente: Lorem Picsum API (https://picsum.photos)</li>
+        <li> Autores internacionales</li>
+        <li> Soporte para favoritos (localStorage)</li>
+        <li> Buscador de autores</li>
+        <li> Diseño adaptable (responsive)</li>
       </ul>
 
       <img src="https://picsum.photos/600/300" alt="Ejemplo API" class="img-info">
 
-      <p class="creditos">Desarrollado por <strong>Tu Nombre</strong> — Proyecto API Individual</p>
+      <p class="creditos">Desarrollado por <strong>Maicol Lancheros</strong> — Proyecto API Individual</p>
     </section>
   `;
 }
